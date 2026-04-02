@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>临床研发中心数智化月度例会 - 第一期</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f4f7fb;
+      --bg-white: #ffffff;
+      --blue: #4361ee;
+      --indigo: #6366f1;
+      --violet: #7c3aed;
+      --orange: #f97316;
+      --coral: #fb7185;
+      --emerald: #10b981;
+      --teal: #14b8a6;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --sky: #0ea5e9;
+      --text: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border: #e2e8f0;
+      --shadow: 0 4px 24px rgba(0,0,0,0.06);
+      --shadow-hover: 0 8px 32px rgba(0,0,0,0.10);
+      --radius: 16px;
+      --gradient-1: linear-gradient(135deg, #4361ee, #7c3aed);
+      --gradient-2: linear-gradient(135deg, #f97316, #f43f5e);
+      --gradient-3: linear-gradient(135deg, #10b981, #0ea5e9);
+      --gradient-warm: linear-gradient(135deg, #fef3c7, #fde68a);
+    }
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ========== Background Decorations ========== */
+    .bg-decoration {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .bg-blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35;
+      animation: blobFloat 20s ease-in-out infinite;
+    }
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 15px) scale(0.95); }
+    }
+
+    /* ========== Slide System ========== */
+    .slides-container { width: 100vw; height: 100vh; position: relative; z-index: 1; }
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 48px 72px 80px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+      transform: translateX(40px);
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1; pointer-events: all; transform: translateX(0);
+    }
+    .slide.exit-left {
+      transform: translateX(-40px); opacity: 0;
+    }
+    .slide > * { max-width: 820px; width: 100%; box-sizing: border-box; }
+
+    /* ========== Progress ========== */
+    .progress-bar {
+      position: fixed; top: 0; left: 0; z-index: 100; height: 3px;
+      background: var(--gradient-1);
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 0 12px rgba(67,97,238,0.4);
+    }
+
+    /* ========== Navigation ========== */
+    .nav-pill {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 100; display: flex; align-items: center; gap: 12px;
+      background: var(--bg-white); border: 1px solid var(--border);
+      border-radius: 40px; padding: 6px 20px;
+      box-shadow: var(--shadow);
+    }
+    .nav-pill button {
+      width: 34px; height: 34px; border-radius: 50%; border: none;
+      background: transparent; color: var(--text); cursor: pointer;
+      font-size: 15px; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .nav-pill button:hover { background: var(--blue); color: white; }
+    .nav-counter { font-size: 12px; color: var(--text-muted); min-width: 50px; text-align: center; font-weight: 500; }
+
+    /* ========== Section Tag ========== */
+    .tag {
+      position: absolute; top: 20px; left: 48px;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .tag-blue { background: #eef2ff; color: var(--blue); }
+    .tag-orange { background: #fff7ed; color: var(--orange); }
+    .tag-green { background: #ecfdf5; color: var(--emerald); }
+    .tag-violet { background: #f5f3ff; color: var(--violet); }
+    .tag-rose { background: #fff1f2; color: var(--rose); }
+    .tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* ========== Typography ========== */
+    h1.hero { font-size: 3rem; font-weight: 800; line-height: 1.3; text-align: center; color: var(--text); }
+    h2.title { font-size: 1.75rem; font-weight: 700; color: var(--text); text-align: center; margin-bottom: 20px; }
+    h3.sub { font-size: 1.15rem; font-weight: 600; margin-bottom: 12px; }
+    .grad-text { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .grad-text-warm { background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ========== Cards ========== */
+    .card {
+      background: var(--bg-white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .card-flat {
+      background: var(--bg-white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+    }
+
+    /* ========== Grids ========== */
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+    .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; width: 100%; }
+    .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 100%; }
+
+    /* ========== Badge ========== */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .b-green { background: #dcfce7; color: #15803d; }
+    .b-amber { background: #fef3c7; color: #b45309; }
+    .b-blue { background: #dbeafe; color: #1d4ed8; }
+    .b-rose { background: #ffe4e6; color: #be123c; }
+    .b-violet { background: #ede9fe; color: #6d28d9; }
+
+    /* ========== Fade Animation ========== */
+    .fu { opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; }
+    .slide.active .fu { opacity: 1; transform: translateY(0); }
+    .slide.active .fu:nth-child(2) { transition-delay: .08s; }
+    .slide.active .fu:nth-child(3) { transition-delay: .16s; }
+    .slide.active .fu:nth-child(4) { transition-delay: .24s; }
+    .slide.active .fu:nth-child(5) { transition-delay: .32s; }
+    .slide.active .fu:nth-child(6) { transition-delay: .4s; }
+    .slide.active .fu:nth-child(7) { transition-delay: .48s; }
+    .slide.active .fu:nth-child(8) { transition-delay: .56s; }
+
+    /* ========== Data Table ========== */
+    .dtable { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem; }
+    .dtable th {
+      padding: 10px 12px; text-align: center; font-weight: 600; font-size: 0.75rem;
+      background: #f1f5f9; color: var(--text-secondary);
+      border-bottom: 2px solid var(--border);
+    }
+    .dtable th:first-child { text-align: left; border-radius: 10px 0 0 0; }
+    .dtable th:last-child { border-radius: 0 10px 0 0; }
+    .dtable td {
+      padding: 9px 12px; text-align: center;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .dtable td:first-child { text-align: left; font-weight: 500; }
+    .dtable tr:last-child td { border-bottom: none; }
+    .dtable tr.hl td { background: #eef2ff; color: var(--blue); font-weight: 600; }
+
+    /* ========== Info Box ========== */
+    .info-box {
+      padding: 14px 20px; border-radius: 12px; font-size: 0.85rem; line-height: 1.6;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .info-blue { background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe; }
+    .info-green { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .info-orange { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+    .info-rose { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
+
+    /* ========== Timeline ========== */
+    .timeline { display: flex; width: 100%; position: relative; gap: 0; }
+    .timeline::before {
+      content: ''; position: absolute; top: 18px; left: 24px; right: 24px;
+      height: 3px; background: linear-gradient(90deg, var(--blue), var(--violet), var(--orange));
+      border-radius: 2px;
+    }
+    .tl-item { flex: 1; text-align: center; padding-top: 40px; position: relative; }
+    .tl-dot {
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 3px solid white; z-index: 2;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .tl-dot.now { background: var(--blue); box-shadow: 0 0 0 4px rgba(67,97,238,0.2); }
+    .tl-year { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .tl-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+
+    /* ========== Flow ========== */
+    .flow { display: flex; align-items: center; gap: 0; width: 100%; max-width: 900px !important; flex-wrap: nowrap; justify-content: center; }
+    .flow-step { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; min-width: 0; text-align: center; }
+    .flow-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); flex-shrink: 0; }
+    .flow-label { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+    .flow-arrow { color: var(--blue); font-size: 18px; flex-shrink: 0; font-weight: 700; }
+
+    /* ========== Stat Card ========== */
+    .stat-card { text-align: center; padding: 20px; }
+    .stat-num { font-size: 2rem; font-weight: 800; }
+    .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* ========== Project Card ========== */
+    .proj-card { position: relative; padding-left: 14px !important; }
+    .proj-card::before { content: ''; position: absolute; left: 0; top: 12px; bottom: 12px; width: 4px; border-radius: 4px; }
+    .proj-card.pg::before { background: var(--emerald); }
+    .proj-card.pa::before { background: var(--amber); }
+    .proj-card.pb::before { background: var(--blue); }
+    .proj-card.pr::before { background: var(--rose); }
+
+    /* ========== Chat Demo ========== */
+    .chat-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+    .chat-panel { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; height: 360px; box-shadow: var(--shadow); }
+    .chat-head { padding: 10px 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
+    .chat-head .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .chat-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: #fafbfe; }
+    .chat-msg { max-width: 88%; padding: 10px 14px; border-radius: 12px; font-size: 0.8rem; line-height: 1.6; opacity: 0; animation: msgIn 0.3s ease forwards; }
+    .chat-msg.user { align-self: flex-end; background: var(--blue); color: white; border-bottom-right-radius: 4px; }
+    .chat-msg.ai { align-self: flex-start; background: white; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    @keyframes msgIn { to { opacity: 1; } }
+    .chat-foot { padding: 10px; border-top: 1px solid var(--border); display: flex; justify-content: center; }
+    .chat-foot button {
+      background: var(--gradient-1); border: none; color: white;
+      padding: 7px 18px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .chat-foot button:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(67,97,238,0.3); }
+
+    /* ========== Maturity Level Bar ========== */
+    .maturity-bar { display: flex; width: 100%; height: 48px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+    .maturity-bar .mb-level {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 600; transition: all 0.3s; cursor: default;
+      border-right: 1px solid rgba(255,255,255,0.5);
+    }
+    .maturity-bar .mb-level:last-child { border-right: none; }
+
+    /* ========== Radar Chart SVG ========== */
+    .radar-wrap { display: flex; align-items: center; gap: 32px; width: 100%; }
+    .radar-right { flex: 1; }
+    .radar-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.88rem; }
+    .radar-item:last-child { border-bottom: none; }
+    .r-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .r-score { font-weight: 700; min-width: 36px; text-align: right; }
+
+    /* ========== URS Tree ========== */
+    .urs-node { padding: 8px 14px; margin: 3px 0; border-radius: 8px; font-size: 0.85rem; line-height: 1.5; transition: background 0.2s; }
+    .urs-node:hover { background: #f1f5f9; }
+    .urs-l1 { font-weight: 700; color: var(--blue); border-left: 3px solid var(--blue); padding-left: 14px; background: #eef2ff; }
+    .urs-l2 { padding-left: 32px; border-left: 3px solid var(--teal); color: var(--text); }
+    .urs-l3 { padding-left: 52px; border-left: 3px solid var(--amber); color: var(--text-secondary); font-size: 0.82rem; }
+
+    /* ========== Share Card ========== */
+    .share-card {
+      background: white; border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s;
+      box-shadow: var(--shadow);
+    }
+    .share-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow-hover); border-color: var(--blue); }
+    .share-icon { font-size: 2rem; margin-bottom: 8px; }
+
+    /* ========== Tip Card ========== */
+    .tip-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: all 0.3s; box-shadow: var(--shadow); }
+    .tip-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .tip-num { font-size: 1.8rem; font-weight: 800; }
+    .tip-title { font-size: 0.95rem; font-weight: 600; margin: 6px 0 4px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    /* ========== Part Nav Sidebar ========== */
+    .part-nav {
+      position: fixed; top: 70px; left: 18px; width: 176px;
+      background: rgba(255,255,255,0.88); backdrop-filter: blur(12px);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px 16px; z-index: 100; box-shadow: var(--shadow);
+      opacity: 0; transform: translateX(-24px);
+      transition: opacity 0.45s, transform 0.45s; pointer-events: none;
+    }
+    .part-nav.visible { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .pn-header { font-size: 0.65rem; font-weight: 700; color: var(--blue); letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; }
+    .pn-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 0; font-size: 0.74rem; color: #94a3b8;
+      transition: all 0.35s; cursor: default;
+    }
+    .pn-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #cbd5e1;
+      flex-shrink: 0; transition: all 0.35s;
+    }
+    .pn-item.active { color: var(--blue); font-weight: 600; }
+    .pn-item.active .pn-dot { background: var(--blue); width: 9px; height: 9px; box-shadow: 0 0 0 3px rgba(67,97,238,0.18); }
+    .pn-item.done { color: var(--emerald); }
+    .pn-item.done .pn-dot { background: var(--emerald); }
+
+    /* Part divider slide */
+    .part-divider { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+    .part-divider .part-num { font-size:5rem; font-weight:900; line-height:1; }
+    .part-divider .part-label { font-size:1.6rem; font-weight:700; margin-top:16px; }
+    .part-divider .part-sub { font-size:0.95rem; color:var(--text-muted); margin-top:10px; line-height:1.6; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .slide { padding: 24px 20px 70px; }
+      h1.hero { font-size: 2rem; }
+      .g2, .g3, .g4, .chat-demo { grid-template-columns: 1fr; }
+      .radar-wrap { flex-direction: column; }
+      .part-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-decoration">
+  <div class="bg-blob" style="width:400px;height:400px;top:-100px;right:-80px;background:rgba(67,97,238,0.12);"></div>
+  <div class="bg-blob" style="width:300px;height:300px;bottom:50px;left:-60px;background:rgba(249,115,22,0.10);animation-delay:-7s;"></div>
+  <div class="bg-blob" style="width:250px;height:250px;top:40%;left:50%;background:rgba(16,185,129,0.08);animation-delay:-14s;"></div>
+</div>
+
+<div class="progress-bar" id="progress"></div>
+
+<!-- Part 1 章节导航 -->
+<div class="part-nav" id="partNav">
+  <div class="pn-header">PART 1 · 五年规划</div>
+  <div class="pn-item" data-ch="0"><span class="pn-dot"></span>引言</div>
+  <div class="pn-item" data-ch="1"><span class="pn-dot"></span>一、外部压力</div>
+  <div class="pn-item" data-ch="2"><span class="pn-dot"></span>二、现状评估</div>
+  <div class="pn-item" data-ch="3"><span class="pn-dot"></span>三、战略预判</div>
+  <div class="pn-item" data-ch="4"><span class="pn-dot"></span>四、角色定位</div>
+  <div class="pn-item" data-ch="5"><span class="pn-dot"></span>五、整体规划</div>
+  <div class="pn-item" data-ch="6"><span class="pn-dot"></span>六、总体路径</div>
+  <div class="pn-item" data-ch="7"><span class="pn-dot"></span>2026重点工作</div>
+</div>
+
+<div class="slides-container" id="slides">
+
+<!-- ==================== SLIDE 0: 封面 ==================== -->
+<div class="slide active">
+  <div style="text-align:center;">
+    <div style="display:inline-block;padding:6px 20px;border-radius:20px;background:#eef2ff;font-size:12px;color:var(--blue);font-weight:600;margin-bottom:32px;letter-spacing:1.5px;">MONTHLY MEETING · EPISODE 01</div>
+    <h1 class="hero" style="margin-bottom:16px;">
+      <span class="grad-text">临床研发中心</span><br>
+      <span>数智化月度例会</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:1.1rem;margin-top:24px;">第一期 · 2026年4月</p>
+    <div style="margin-top:52px;display:flex;gap:20px;justify-content:center;">
+      <div class="card" style="padding:16px 24px;text-align:center;min-width:100px;">
+        <div style="font-size:1.4rem;">📋</div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">五年规划</div>
+      </div>
+      <div class="card" style="padding:16px 24px;text-align:center;min-width:100px;">
+        <div style="font-size:1.4rem;">🚀</div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">项目进展</div>
+      </div>
+      <div class="card" style="padding:16px 24px;text-align:center;min-width:100px;">
+        <div style="font-size:1.4rem;">📝</div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">立项流程</div>
+      </div>
+      <div class="card" style="padding:16px 24px;text-align:center;min-width:100px;">
+        <div style="font-size:1.4rem;">🤖</div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">驾驭AI</div>
+      </div>
+      <div class="card" style="padding:16px 24px;text-align:center;min-width:100px;">
+        <div style="font-size:1.4rem;">💬</div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">部门互动</div>
+      </div>
+    </div>
+    <p style="margin-top:40px;color:var(--text-muted);font-size:0.8rem;">数智化推进小组 · 按 → 或空格键开始</p>
+  </div>
+</div>
+
+<!-- ==================== Part1 标题页 ==================== -->
+<div class="slide part-divider">
+  <div style="display:inline-block;padding:6px 24px;border-radius:20px;background:var(--gradient-1);font-size:12px;color:white;font-weight:600;letter-spacing:2px;margin-bottom:28px;">PART 1</div>
+  <div class="part-num grad-text">01</div>
+  <div class="part-label">数智化五年规划及<br>2026年重点工作</div>
+  <div class="part-sub" style="margin-top:20px;">
+    外部压力 → 现状评估 → 战略预判 → 角色定位 → 整体规划 → 重点工作
+  </div>
+</div>
+
+<!-- ==================== Part1 引入 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 五年规划</div>
+  <div style="text-align:center;max-width:820px;">
+    <h1 class="hero fu" style="font-size:2.4rem;">
+      我们为什么需要<span class="grad-text">数智化</span>？
+    </h1>
+    <p class="fu desc" style="margin-top:20px;font-size:1rem;">
+      我们现在在做什么？将要做什么？为什么？怎么做？大家怎么参与？
+    </p>
+    <div class="g3 fu" style="margin-top:36px;">
+      <div class="card" style="text-align:center;border-top:3px solid var(--blue);">
+        <div style="font-size:2rem;margin-bottom:8px;">📊</div>
+        <div style="font-weight:700;color:var(--blue);">外部有压力</div>
+        <div class="desc" style="margin-top:6px;font-size:0.82rem;">集采 · 合规监管 · 竞企竞速</div>
+      </div>
+      <div class="card" style="text-align:center;border-top:3px solid var(--emerald);">
+        <div style="font-size:2rem;margin-bottom:8px;">🏗️</div>
+        <div style="font-weight:700;color:var(--emerald);">内部有基础</div>
+        <div class="desc" style="margin-top:6px;font-size:0.82rem;">数字化全业务覆盖<br>正积极探索AI场景</div>
+      </div>
+      <div class="card" style="text-align:center;border-top:3px solid var(--orange);">
+        <div style="font-size:2rem;margin-bottom:8px;">🎯</div>
+        <div style="font-weight:700;color:var(--orange);">方向已清晰</div>
+        <div class="desc" style="margin-top:6px;font-size:0.82rem;">数据一体化平台为底座<br>AI应用持续演进为引擎</div>
+      </div>
+    </div>
+    <div class="fu info-blue" style="margin-top:24px;justify-content:center;font-size:0.88rem;">
+      <strong>合力未形成：</strong>数字化的"量"有了，但"质"尚未形成——数据分散、工具孤立
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: 外部三大压力 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 外部压力</div>
+  <h2 class="title fu">一、外部三大压力</h2>
+  <div class="g3 fu" style="gap:20px;">
+    <div class="card" style="border-top:3px solid var(--rose);text-align:center;padding:28px;">
+      <div style="font-size:2.2rem;margin-bottom:12px;">🏥</div>
+      <div style="font-weight:700;font-size:1.1rem;color:var(--rose);margin-bottom:10px;">1.1 集采压力</div>
+      <div class="desc" style="font-size:0.9rem;line-height:1.8;">
+        药品价格平均降幅达 <strong style="color:var(--rose);">52%</strong><br>
+        利润空间大幅压缩<br>
+        临研成本过程管控成为<strong>关键变量</strong>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber);text-align:center;padding:28px;">
+      <div style="font-size:2.2rem;margin-bottom:12px;">⚖️</div>
+      <div style="font-weight:700;font-size:1.1rem;color:var(--amber);margin-bottom:10px;">1.2 合规监管压力</div>
+      <div class="desc" style="font-size:0.9rem;line-height:1.8;">
+        E6(R3) <strong>2026.3.31</strong> 已生效<br>
+        PIPL罚款上限 <strong style="color:var(--rose);">5000万元</strong><br>
+        数据管控从"建议"→<strong>"强制"</strong>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue);text-align:center;padding:28px;">
+      <div style="font-size:2.2rem;margin-bottom:12px;">🚀</div>
+      <div style="font-weight:700;font-size:1.1rem;color:var(--blue);margin-bottom:10px;">1.3 竞企竞速压力</div>
+      <div class="desc" style="font-size:0.9rem;line-height:1.8;">
+        辉瑞/阿斯利康/昆泰<br>
+        密集布局 <strong>AI + 临床</strong><br>
+        数智场景探索决定核心优势
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: 竞企AI布局 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 技术竞速</div>
+  <h2 class="title fu">1.3 国际头部竞企AI布局</h2>
+  <div class="g3 fu" style="gap:16px;">
+    <div class="card" style="border-top:3px solid var(--blue);text-align:center;">
+      <div style="font-size:1.6rem;margin-bottom:8px;">💊</div>
+      <div style="font-weight:700;font-size:1rem;">辉瑞 Pfizer</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">"自研"模式</div>
+      <div class="desc" style="font-size:0.88rem;line-height:1.7;">
+        数据清理 30天→<strong style="color:var(--blue);">22小时</strong><br>
+        AI已覆盖<strong>超半数</strong>临床试验
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--violet);text-align:center;">
+      <div style="font-size:1.6rem;margin-bottom:8px;">🧬</div>
+      <div style="font-weight:700;font-size:1rem;">阿斯利康 AZ</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">"药企联合"模式</div>
+      <div class="desc" style="font-size:0.88rem;line-height:1.7;">
+        ChatInvent <strong>多智能体</strong>系统<br>
+        Evinova子公司<strong>商业化输出</strong>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--orange);text-align:center;">
+      <div style="font-size:1.6rem;margin-bottom:8px;">🌐</div>
+      <div style="font-weight:700;font-size:1rem;">昆泰 IQVIA</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">"跨界合作"模式</div>
+      <div class="desc" style="font-size:0.88rem;line-height:1.7;">
+        与亚马逊/英伟达<strong>战略合作</strong><br>
+        定位"<strong>下一代服务形态</strong>"
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: 能力评估结论 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 现状评估</div>
+  <h2 class="title fu">二、现状评估 — 数智化能力（CMMI五维度）</h2>
+  <div class="radar-wrap fu">
+    <svg viewBox="0 0 340 340" width="300" height="300" style="flex-shrink:0;">
+      <g transform="translate(170,170)">
+        <polygon points="0,-130 123.7,-40.2 76.5,105.2 -76.5,105.2 -123.7,-40.2" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+        <polygon points="0,-97.5 92.8,-30.1 57.4,78.9 -57.4,78.9 -92.8,-30.1" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+        <polygon points="0,-65 61.8,-20.1 38.2,52.6 -38.2,52.6 -61.8,-20.1" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+        <polygon points="0,-32.5 30.9,-10 19.1,26.3 -19.1,26.3 -30.9,-10" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="0" y1="0" x2="0" y2="-130" stroke="#e2e8f0"/><line x1="0" y1="0" x2="123.7" y2="-40.2" stroke="#e2e8f0"/><line x1="0" y1="0" x2="76.5" y2="105.2" stroke="#e2e8f0"/><line x1="0" y1="0" x2="-76.5" y2="105.2" stroke="#e2e8f0"/><line x1="0" y1="0" x2="-123.7" y2="-40.2" stroke="#e2e8f0"/>
+        <polygon points="0,-65 86.2,-28 38.2,52.6 -38.2,52.6 -61.8,-20.1" fill="rgba(67,97,238,0.12)" stroke="var(--blue)" stroke-width="2.5"/>
+        <circle cx="0" cy="-65" r="5" fill="var(--blue)"/><circle cx="86.2" cy="-28" r="5" fill="var(--blue)"/><circle cx="38.2" cy="52.6" r="5" fill="var(--blue)"/><circle cx="-38.2" cy="52.6" r="5" fill="var(--blue)"/><circle cx="-61.8" cy="-20.1" r="5" fill="var(--blue)"/>
+        <text x="0" y="-140" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">数据架构</text>
+        <text x="136" y="-36" text-anchor="start" fill="var(--text)" font-size="11" font-weight="600">工具效能</text>
+        <text x="86" y="118" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">质量治理</text>
+        <text x="-86" y="118" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">数字战略</text>
+        <text x="-136" y="-36" text-anchor="end" fill="var(--text)" font-size="11" font-weight="600">人才能力</text>
+      </g>
+    </svg>
+    <div class="radar-right">
+      <div class="radar-item"><span class="r-dot" style="background:var(--blue);"></span><span style="flex:1;">数据架构与互联互通 (25%)</span><span class="r-score" style="color:var(--rose);">2.5</span></div>
+      <div class="radar-item"><span class="r-dot" style="background:var(--teal);"></span><span style="flex:1;">工具效能与业务融合 (25%)</span><span class="r-score" style="color:var(--emerald);">3.5</span></div>
+      <div class="radar-item"><span class="r-dot" style="background:var(--amber);"></span><span style="flex:1;">临床质量与风险治理 (20%)</span><span class="r-score" style="color:var(--rose);">2.5</span></div>
+      <div class="radar-item"><span class="r-dot" style="background:var(--violet);"></span><span style="flex:1;">数字战略与组织生态 (15%)</span><span class="r-score" style="color:var(--rose);">2.5</span></div>
+      <div class="radar-item"><span class="r-dot" style="background:var(--coral);"></span><span style="flex:1;">数智人才与能力建设 (15%)</span><span class="r-score" style="color:var(--emerald);">3.5</span></div>
+      <div style="margin-top:14px;padding:14px 18px;background:#eef2ff;border-radius:12px;border:1px solid #c7d2fe;">
+        <span style="font-size:0.88rem;">综合加权得分：</span>
+        <span style="font-size:1.6rem;font-weight:800;color:var(--blue);">2.88</span>
+        <span style="font-size:0.8rem;color:var(--text-muted);"> / 5.0 · 第2—3级过渡阶段</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: 竞企对标总览 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 竞企对标</div>
+  <h2 class="title fu">2.3 竞企对标 — 我们在哪里？</h2>
+  <div class="g3 fu" style="gap:14px;margin-bottom:16px;">
+    <div class="card" style="text-align:center;padding:20px;border-top:3px solid var(--violet);">
+      <div style="font-size:0.78rem;color:var(--text-muted);">国际头部（辉瑞/AZ/IQVIA）</div>
+      <div style="font-size:2.2rem;font-weight:800;color:var(--violet);">4.6~4.8</div>
+      <div style="font-size:0.78rem;color:var(--violet);">第5级 · 行业引领</div>
+    </div>
+    <div class="card" style="text-align:center;padding:20px;border-top:3px solid var(--amber);">
+      <div style="font-size:0.78rem;color:var(--text-muted);">国内竞企（华海/科伦/正大天晴）</div>
+      <div style="font-size:2.2rem;font-weight:800;color:var(--amber);">3.0~3.5</div>
+      <div style="font-size:0.78rem;color:var(--amber);">第3~4级 · 流程在线/数据驱动</div>
+    </div>
+    <div class="card" style="text-align:center;padding:20px;border-top:3px solid var(--rose);">
+      <div style="font-size:0.78rem;color:var(--text-muted);">本中心</div>
+      <div style="font-size:2.2rem;font-weight:800;color:var(--rose);">2.88</div>
+      <div style="font-size:0.78rem;color:var(--rose);">第2~3级 · 过渡阶段</div>
+    </div>
+  </div>
+  <div class="g2 fu" style="gap:14px;">
+    <div class="info-rose" style="font-size:0.85rem;">
+      <strong>短板：</strong>数据架构 ↓ · 质量治理 ↓ · 数字战略 ↓ — 正是五年规划重点攻关方向
+    </div>
+    <div class="info-green" style="font-size:0.85rem;">
+      <strong>亮点：</strong>工具效能 → · 人才能力 → — 处于国内同行持平或领先水平
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: 核心问题诊断 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 问题诊断</div>
+  <h2 class="title fu">2.4 核心问题 — 有"形"缺"力"</h2>
+  <div class="g4 fu" style="gap:14px;">
+    <div class="card" style="text-align:center;padding:24px;border-top:3px solid var(--rose);">
+      <div style="font-size:1.8rem;margin-bottom:8px;">🔗</div>
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">数据不互通</div>
+      <div class="desc" style="font-size:0.82rem;">12个系统孤立<br>跨系统靠手工拼接</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px;border-top:3px solid var(--amber);">
+      <div style="font-size:1.8rem;margin-bottom:8px;">🔐</div>
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">主权有隐患</div>
+      <div class="desc" style="font-size:0.82rem;">云端存储<br>PIPL合规风险</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px;border-top:3px solid var(--violet);">
+      <div style="font-size:1.8rem;margin-bottom:8px;">🧩</div>
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">AI碎片化</div>
+      <div class="desc" style="font-size:0.82rem;">工具各自孤立<br>不成体系</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px;border-top:3px solid var(--blue);">
+      <div style="font-size:1.8rem;margin-bottom:8px;">🧭</div>
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;">战略不清晰</div>
+      <div class="desc" style="font-size:0.82rem;">缺乏统筹<br>路径不明确</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8: AI技术演进 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 战略预判</div>
+  <h2 class="title fu">三、AI技术五大演进方向</h2>
+  <div style="display:flex;flex-direction:column;gap:8px;width:100%;" class="fu">
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:white;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--blue);">
+      <span class="badge b-blue" style="flex-shrink:0;">2026-27</span>
+      <div style="flex:1;"><strong>从工具到Agent</strong> — AI主动触发动作，形成闭环</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:white;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--violet);">
+      <span class="badge b-violet" style="flex-shrink:0;">2027-29</span>
+      <div style="flex:1;"><strong>多智能体协同</strong> — 数据质量+安全+合规Agent联动</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:white;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--orange);">
+      <span class="badge b-amber" style="flex-shrink:0;">2027-28</span>
+      <div style="flex:1;"><strong>生成式AI×监管</strong> — 辅助CSR/SAE报告，预测CDE审查</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:white;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--teal);">
+      <span class="badge b-green" style="flex-shrink:0;">2028-30</span>
+      <div style="flex:1;"><strong>联邦学习</strong> — 数据不动模型动，解决主权与AI训练矛盾</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:white;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--coral);">
+      <span class="badge b-rose" style="flex-shrink:0;">2028-30</span>
+      <div style="flex:1;"><strong>数字孪生</strong> — 虚拟模拟试验设计，预测BE成功概率</div>
+    </div>
+  </div>
+  <div class="fu info-green" style="margin-top:14px;width:100%;">
+    🔑 <strong>关键共识：</strong>数据本地一体化平台是解锁所有AI应用价值的<strong>基础设施</strong>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9: 行业趋势与政策 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 战略预判</div>
+  <h2 class="title fu">3.2 行业趋势 & 政策信号</h2>
+  <div class="g2 fu" style="gap:20px;">
+    <div>
+      <h3 class="sub" style="color:var(--orange);">行业四大趋势</h3>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div class="card-flat" style="padding:10px 14px;border-left:3px solid var(--rose);"><strong style="font-size:0.85rem;">利润持续压缩</strong><span class="desc" style="font-size:0.78rem;margin-left:8px;">口服固体仿制药进入微利时代</span></div>
+        <div class="card-flat" style="padding:10px 14px;border-left:3px solid var(--amber);"><strong style="font-size:0.85rem;">复杂制剂差异化</strong><span class="desc" style="font-size:0.78rem;margin-left:8px;">吸入/透皮/纳米制剂壁垒高</span></div>
+        <div class="card-flat" style="padding:10px 14px;border-left:3px solid var(--blue);"><strong style="font-size:0.85rem;">FDA数据要求 ↑</strong><span class="desc" style="font-size:0.78rem;margin-left:8px;">CDISC标准趋于强制化</span></div>
+        <div class="card-flat" style="padding:10px 14px;border-left:3px solid var(--teal);"><strong style="font-size:0.85rem;">去中心化临研(DCT)</strong><span class="desc" style="font-size:0.78rem;margin-left:8px;">远程采集/知情同意试点</span></div>
+      </div>
+    </div>
+    <div>
+      <h3 class="sub" style="color:var(--violet);">关键政策信号</h3>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div class="card-flat" style="padding:10px 14px;border-left:3px solid var(--violet);"><strong style="font-size:0.85rem;">七部门数智化方案</strong><span class="desc" style="font-size:0.78rem;margin-left:8px;">2030年全覆盖 → 门槛要求</span></div>
+        <div class="card-flat" style="padding:10px 14px;border-left:3px solid var(--blue);"><strong style="font-size:0.85rem;">E6(R3) 已生效</strong><span class="desc" style="font-size:0.78rem;margin-left:8px;">数据完整性成高频检查项</span></div>
+        <div class="card-flat" style="padding:10px 14px;border-left:3px solid var(--rose);"><strong style="font-size:0.85rem;">PIPL + 数据安全法</strong><span class="desc" style="font-size:0.78rem;margin-left:8px;">受试者数据=敏感个人信息</span></div>
+        <div class="card-flat" style="padding:10px 14px;border-left:3px solid var(--emerald);"><strong style="font-size:0.85rem;">上海AI医疗方案</strong><span class="desc" style="font-size:0.78rem;margin-left:8px;">外部合作和专项申请窗口</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 10: 角色定位与目标 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 角色定位</div>
+  <h2 class="title fu">四、角色定位与目标</h2>
+  <div class="fu info-blue" style="width:100%;margin-bottom:20px;font-size:0.88rem;">
+    <strong>综合结论：</strong>未来五年，仿制药临研赛道将经历<strong>"数智能力驱动质量竞争"</strong>的结构性转变。现在规划 = 在趋势窗口期内布局。
+  </div>
+  <div class="g2 fu" style="gap:24px;">
+    <div class="card" style="border-top:3px solid var(--blue);text-align:center;padding:28px;">
+      <div style="font-size:2.4rem;margin-bottom:12px;">🏢</div>
+      <div style="font-weight:700;font-size:1.1rem;color:var(--blue);margin-bottom:10px;">集团内 · "先锋部门"</div>
+      <div class="desc" style="font-size:0.88rem;line-height:1.8;">
+        以<strong>可量化</strong>的降本增效数据<br>
+        为集团数智化投资决策提供依据<br>
+        输出可复制的方法论和经验
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--emerald);text-align:center;padding:28px;">
+      <div style="font-size:2.4rem;margin-bottom:12px;">🏆</div>
+      <div style="font-weight:700;font-size:1.1rem;color:var(--emerald);margin-bottom:10px;">行业内 · "第一梯队"</div>
+      <div class="desc" style="font-size:0.88rem;line-height:1.8;">
+        从3级提升至<strong>4~4.5级</strong><br>
+        数智化能力成为<br>
+        <strong>差异化竞争力</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 11: 架构蓝图 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 整体规划</div>
+  <h2 class="title fu">5.1 架构蓝图</h2>
+  <div class="fu" style="text-align:center;">
+    <img src="数智化五年发展规划-0331-图片/5.1 架构蓝图_图1.png" alt="架构蓝图" style="max-width:100%;border-radius:12px;box-shadow:var(--shadow);margin-bottom:16px;">
+  </div>
+  <div class="fu info-blue" style="font-size:0.85rem;">
+    🏗️ <strong>核心原则：</strong>不替换现有系统、只建汇聚层、往上叠AI应用 — 以<strong>标准化数据底座</strong>驱动全流程数智化
+  </div>
+</div>
+
+<!-- ==================== SLIDE 12: 场景价值与优先级 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 整体规划</div>
+  <h2 class="title fu">5.2 三大价值路径 & 优先级矩阵</h2>
+  <div class="g3 fu" style="gap:14px;margin-bottom:16px;">
+    <div class="card" style="text-align:center;border-top:3px solid var(--emerald);padding:18px;">
+      <div style="font-size:1.6rem;">💰</div>
+      <div style="font-weight:700;color:var(--emerald);font-size:0.92rem;margin:6px 0;">降成本</div>
+      <div class="desc" style="font-size:0.8rem;">RBM降低监查成本<br><strong>15%—30%</strong></div>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid var(--blue);padding:18px;">
+      <div style="font-size:1.6rem;">⏱️</div>
+      <div style="font-weight:700;color:var(--blue);font-size:0.92rem;margin:6px 0;">缩周期</div>
+      <div class="desc" style="font-size:0.8rem;">脱落率改善<br><strong>5%—15%</strong></div>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid var(--rose);padding:18px;">
+      <div style="font-size:1.6rem;">🛡️</div>
+      <div style="font-weight:700;color:var(--rose);font-size:0.92rem;margin:6px 0;">守合规</div>
+      <div class="desc" style="font-size:0.8rem;">规避PIPL罚款<br><strong>上限5000万</strong></div>
+    </div>
+  </div>
+  <div class="g2 fu" style="gap:12px;">
+    <div class="card-flat" style="padding:14px 16px;border-left:3px solid var(--blue);line-height:1.7;font-size:0.84rem;">
+      <strong style="color:var(--blue);">★ 2026优先启动：</strong>数据标准体系 · 一体化平台试点 · 成本管控看板 · 数据主权改造 · 管理驾驶舱
+    </div>
+    <div class="card-flat" style="padding:14px 16px;border-left:3px solid var(--orange);line-height:1.7;font-size:0.84rem;">
+      <strong style="color:var(--orange);">▲ 2027-28规划：</strong>数据异常预警Agent · 依从性AI管理 · AI辅助统计 · 多智能体框架
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 13: ROI框架与组织保障 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 保障体系</div>
+  <h2 class="title fu">ROI框架 & 组织保障</h2>
+  <div class="g2 fu" style="gap:20px;">
+    <div class="card" style="border-top:3px solid var(--emerald);padding:22px;">
+      <div style="font-weight:700;font-size:1rem;color:var(--emerald);margin-bottom:14px;">💰 ROI四条路径</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:0.84rem;">
+        <div style="display:flex;justify-content:space-between;padding:6px 10px;background:#f0fdf4;border-radius:8px;">
+          <span>A. CRA人效提升</span><span style="color:var(--emerald);font-weight:600;">效率×人数</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 10px;background:#eef2ff;border-radius:8px;">
+          <span>B. 临研成本节约</span><span style="color:var(--blue);font-weight:600;">品种×降本</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 10px;background:#fff1f2;border-radius:8px;">
+          <span>C. 合规风险规避</span><span style="color:var(--rose);font-weight:600;">稽查×风险</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 10px;background:#fef3c7;border-radius:8px;">
+          <span>D. 管理效率提升</span><span style="color:var(--amber);font-weight:600;">报告×人天</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:#eef2ff;border-radius:10px;font-size:0.82rem;text-align:center;">
+        投资回收期参考：<strong style="color:var(--blue);">1.5—3年</strong> · 集成层建成后边际成本低
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue);padding:22px;">
+      <div style="font-weight:700;font-size:1rem;color:var(--blue);margin-bottom:14px;">🏛️ 组织保障</div>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:0.88rem;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.2rem;">👥</span>
+          <div><strong>三级推进体系</strong><br><span class="desc" style="font-size:0.8rem;">决策小组 → 推动小组 → 业务小组</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.2rem;">🔄</span>
+          <div><strong>月度例会机制</strong><br><span class="desc" style="font-size:0.8rem;">自上而下+自下而上双向监督</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.2rem;">⚡</span>
+          <div><strong>自研+外采策略</strong><br><span class="desc" style="font-size:0.8rem;">标准化→采购 · 差异化→自研</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 总体路径 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 总体路径</div>
+  <h2 class="title fu">六、总体路径 — 从"AI助理"到"自主多智能体协同"</h2>
+  <div class="fu" style="text-align:center;">
+    <img src="数智化五年发展规划-0331-图片/七、总体路径_图1.png" alt="总体路径" style="max-width:100%;border-radius:12px;box-shadow:var(--shadow);">
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 2026年重点工作-四大方向 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 重点工作</div>
+  <h2 class="title fu">2026年重点工作 — 四大方向</h2>
+  <div class="fu" style="text-align:center;">
+    <img src="数智化五年发展规划-0331-图片/十、2026年重点工作_图3.png" alt="2026四大方向" style="max-width:100%;border-radius:12px;box-shadow:var(--shadow);">
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 2026年重点工作-时间线 ==================== -->
+<div class="slide">
+  <div class="tag tag-blue">PART 1 · 重点工作</div>
+  <h2 class="title fu">2026年重点工作 — 季度节奏</h2>
+  <div class="timeline fu" style="margin-bottom:16px;">
+    <div class="tl-item"><div class="tl-dot now" style="background:var(--emerald);"></div><div class="tl-year" style="color:var(--emerald);">Q1 ✓</div><div class="tl-label">患者匹配上线<br>ICSR立项<br>DLP策略优化</div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--blue);"></div><div class="tl-year">Q2</div><div class="tl-label">数据标准体系<br>一体化平台启动<br>成本管控看板</div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--violet);"></div><div class="tl-year">Q3</div><div class="tl-label">ICSR需求调研<br>驾驶舱建设<br>培训体系搭建</div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:var(--orange);"></div><div class="tl-year">Q4</div><div class="tl-label">平台试点上线<br>年度复评<br>2027规划</div></div>
+  </div>
+</div>
+
+<!-- ==================== Part1 小结过渡页 ==================== -->
+<div class="slide part-divider">
+  <div style="display:inline-block;padding:6px 24px;border-radius:20px;background:#eef2ff;font-size:12px;color:var(--blue);font-weight:600;letter-spacing:2px;margin-bottom:20px;">PART 1 · 小结</div>
+  <h2 style="font-size:1.8rem;font-weight:700;margin-bottom:28px;">五年规划<span class="grad-text">一句话</span></h2>
+  <div class="card" style="max-width:680px;padding:28px 36px;border-left:4px solid var(--blue);text-align:left;">
+    <div style="font-size:1.05rem;line-height:2;color:var(--text);">
+      以<strong style="color:var(--blue);">数据本地一体化平台</strong>为底座，<br>
+      以<strong style="color:var(--violet);">AI场景持续演进</strong>为引擎，<br>
+      用五年时间从 <strong style="color:var(--rose);">L2.88</strong> 提升至 <strong style="color:var(--blue);">L4</strong>，<br>
+      成为国内仿制药临研数智化<strong style="color:var(--emerald);">第一梯队</strong>。
+    </div>
+  </div>
+  <div style="margin-top:32px;display:flex;gap:16px;">
+    <div style="padding:10px 20px;background:#eef2ff;border-radius:12px;font-size:0.85rem;color:var(--blue);font-weight:500;">接下来 → Part 2 项目进展</div>
+  </div>
+</div>
+
+<!-- ==================== Part2 项目进展 ==================== -->
+<div class="slide">
+  <div class="tag tag-green">PART 2 · 项目进展</div>
+  <h2 class="title fu">🚀 Q1 数智化项目进展</h2>
+  <div class="g2 fu" style="gap:14px;">
+    <div class="card proj-card pg"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>🎯 患者智能匹配系统</strong><span class="badge b-green">已上线</span></div><div class="desc" style="margin-top:6px;font-size:0.82rem;">已正式上线投入使用</div><div style="font-size:0.78rem;color:var(--teal);margin-top:6px;">▸ 下一步：项目管理模块 + 角色分级机制优化更新</div></div>
+    <div class="card proj-card pa"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>📋 ICSR智能管理系统</strong><span class="badge b-amber">立项中</span></div><div class="desc" style="margin-top:6px;font-size:0.82rem;">已确认立项文件</div><div style="font-size:0.78rem;color:var(--teal);margin-top:6px;">▸ 下一步：推动立项沟通会，加速进入需求调研和方案设计</div></div>
+    <div class="card proj-card pb"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>🔗 临床数据一体化平台</strong><span class="badge b-blue">推进中</span></div><div class="desc" style="margin-top:6px;font-size:0.82rem;">多轮需求沟通，明确CCP与EDC通过API打通 + 后续本地化路径</div><div style="font-size:0.78rem;color:var(--teal);margin-top:6px;">▸ 下一步：按既定周期计划推进</div></div>
+    <div class="card proj-card pb"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>🛡️ DLP数据防泄漏</strong><span class="badge b-blue">优化中</span></div><div class="desc" style="margin-top:6px;font-size:0.82rem;">完成2/3部门第一轮策略测试，正开展第二轮优化</div><div style="font-size:0.78rem;color:var(--teal);margin-top:6px;">▸ 下一步：高敏感文件策略 + 低敏感数据收集</div></div>
+    <div class="card proj-card pr"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>🌐 智能翻译</strong><span class="badge b-rose">调整中</span></div><div class="desc" style="margin-top:6px;font-size:0.82rem;">泰雅科技试用反馈采购意义不大</div><div style="font-size:0.78rem;color:var(--teal);margin-top:6px;">▸ 下一步：集团更新为百度翻译模型，可在云帆平台使用</div></div>
+    <div class="card proj-card pb"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>🤖 智能客服</strong><span class="badge b-blue">扩展中</span></div><div class="desc" style="margin-top:6px;font-size:0.82rem;">集团推进智能客服需求</div><div style="font-size:0.78rem;color:var(--teal);margin-top:6px;">▸ 下一步：扩充应用范围和功能项</div></div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 27: Part3 立项流程 ==================== -->
+<div class="slide">
+  <div class="tag tag-orange">PART 3 · 立项流程</div>
+  <h2 class="title fu">📝 AI项目立项全流程</h2>
+  <div class="flow fu" style="margin-bottom:20px;">
+    <div class="flow-step"><div class="flow-icon" style="background:#eef2ff;">💬</div><div class="flow-label">收集需求</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-icon" style="background:#ecfdf5;">🔍</div><div class="flow-label">需求分析</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-icon" style="background:#fff7ed;">📊</div><div class="flow-label">初步调研</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-icon" style="background:#fef3c7;">📄</div><div class="flow-label">立项准备</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-icon" style="background:#f5f3ff;">🤝</div><div class="flow-label">沟通会</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-icon" style="background:#ffe4e6;">✏️</div><div class="flow-label">文件优化</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-icon" style="background:#dbeafe;">📮</div><div class="flow-label">OA流程</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-icon" style="background:#dcfce7;">✅</div><div class="flow-label">完成立项</div></div>
+  </div>
+  <div class="fu info-blue" style="width:100%;">
+    📌 <strong>核心要点：</strong>需求提出部门完成<strong>用户需求说明书</strong>（功能性需求外的章节）和<strong>立项报告</strong>初稿，推进小组审核优化后提交集团。
+  </div>
+</div>
+
+<!-- ==================== SLIDE: URS用户需求说明书写法 ==================== -->
+<div class="slide">
+  <div class="tag tag-orange">PART 3 · 用户需求说明书</div>
+  <h2 class="title fu">📐 用户需求说明书 — 功能性需求写法</h2>
+  <div class="g2 fu" style="gap:24px;">
+    <div>
+      <h3 class="sub" style="color:var(--blue);">写法套路：功能拆解三层结构</h3>
+      <div class="card" style="padding:16px 18px;margin-bottom:12px;border-left:3px solid var(--blue);">
+        <div style="font-size:0.82rem;line-height:1.8;">
+          <strong>第一步：</strong>梳理系统的<strong style="color:var(--blue);">核心功能</strong>模块<br>
+          <strong>第二步：</strong>每个核心功能拆为<strong style="color:var(--teal);">主功能</strong><br>
+          <strong>第三步：</strong>主功能继续拆为<strong style="color:var(--amber);">子功能</strong>（可选）<br>
+          <span style="color:var(--text-muted);font-size:0.78rem;">每条需求用编号标记，最多三级：URS-XX → URS-XX-XX → URS-XX-XX-XX</span>
+        </div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">每条功能需求要描述清楚：<strong>谁</strong>在<strong>什么时候</strong>做<strong>什么操作</strong>，系统<strong>怎么响应</strong></div>
+    </div>
+    <div>
+      <h3 class="sub" style="color:var(--emerald);">实战示例（ICSR系统）</h3>
+      <div class="urs-node urs-l1">URS-01 智能解析（核心功能）</div>
+      <div class="urs-node urs-l2" style="font-size:0.78rem;">上传文件 → 图像质量检测 → OCR提取 → 结构化信息</div>
+      <div class="urs-node urs-l1" style="margin-top:6px;">URS-02 智能分析（核心功能）</div>
+      <div class="urs-node urs-l2">URS-02-01 高可读性报告展示界面（主功能）</div>
+      <div class="urs-node urs-l3">URS-02-01-01 双窗口比对查看（子功能）</div>
+      <div class="urs-node urs-l3" style="font-size:0.78rem;">审核时分屏显示源文件与提取文本，逐项核对</div>
+      <div class="urs-node urs-l3">URS-02-01-02 信息比对溯源（子功能）</div>
+      <div class="urs-node urs-l3" style="font-size:0.78rem;">自动比对随访历史版本，高亮新增/修改内容</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 立项报告写法 ==================== -->
+<div class="slide">
+  <div class="tag tag-orange">PART 3 · 立项报告</div>
+  <h2 class="title fu">📄 立项报告 — 写法结构与要点</h2>
+  <div class="fu" style="display:flex;flex-direction:column;gap:10px;">
+    <div class="card" style="padding:16px 20px;border-left:4px solid var(--blue);">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="font-size:1.4rem;">📋</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.95rem;color:var(--blue);margin-bottom:4px;">一、项目概述</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.82rem;">
+            <span style="padding:3px 10px;background:#eef2ff;border-radius:6px;"><strong>项目背景</strong> — 行业趋势+内部现状</span>
+            <span style="padding:3px 10px;background:#eef2ff;border-radius:6px;"><strong>项目痛点</strong> — 具体问题+量化数据</span>
+            <span style="padding:3px 10px;background:#eef2ff;border-radius:6px;"><strong>项目目标</strong> — 解决什么+达成什么</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:16px 20px;border-left:4px solid var(--emerald);">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="font-size:1.4rem;">🛠️</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.95rem;color:var(--emerald);margin-bottom:4px;">二、项目方案</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.82rem;">
+            <span style="padding:3px 10px;background:#ecfdf5;border-radius:6px;"><strong>建设方案</strong> — 功能需求概述</span>
+            <span style="padding:3px 10px;background:#ecfdf5;border-radius:6px;"><strong>项目计划</strong> — 预期上线时间</span>
+            <span style="padding:3px 10px;background:#ecfdf5;border-radius:6px;"><strong>项目范围</strong> — 用户/业务/功能范围</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:16px 20px;border-left:4px solid var(--amber);">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="font-size:1.4rem;">⚠️</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.95rem;color:var(--amber);margin-bottom:4px;">三、风险与控制措施</div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);">识别技术风险、数据风险、合规风险，对应给出控制方案</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:16px 20px;border-left:4px solid var(--rose);">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="font-size:1.4rem;">💰</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:0.95rem;color:var(--rose);margin-bottom:4px;">四、项目预期收益（用量化指标说话）</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.82rem;">
+            <span style="padding:3px 10px;background:#fff1f2;border-radius:6px;"><strong>效率提升</strong> — 节省工时×人数</span>
+            <span style="padding:3px 10px;background:#fff1f2;border-radius:6px;"><strong>成本节约</strong> — 降低金额/比例</span>
+            <span style="padding:3px 10px;background:#fff1f2;border-radius:6px;"><strong>质量合规</strong> — 减少风险/Finding</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fu info-orange" style="margin-top:8px;font-size:0.82rem;">
+    💡 <strong>写法套路：</strong>每章先说"是什么"，再说"为什么重要"，最后用<strong>数据/指标</strong>佐证 — 有数据的报告才有说服力
+  </div>
+</div>
+
+<!-- ==================== SLIDE 29: 立项支持 ==================== -->
+<div class="slide">
+  <div class="tag tag-orange">PART 3 · 立项支持</div>
+  <h2 class="title fu">🤝 立项支持</h2>
+  <div style="max-width:680px;width:100%;" class="fu">
+    <div class="card" style="padding:28px;margin-bottom:16px;border-left:4px solid var(--emerald);">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:2.2rem;">📋</span>
+        <div>
+          <div style="font-weight:700;font-size:1.05rem;">审核与优化</div>
+          <div class="desc" style="margin-top:6px;font-size:0.88rem;">各位的初稿文件将汇总至推进小组进行审核优化，随后发至集团推进后续立项。</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:28px;border-left:4px solid var(--violet);">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:2.2rem;">🤖</span>
+        <div>
+          <div style="font-weight:700;font-size:1.05rem;">AI模板化 <span class="badge b-violet">Coming Soon</span></div>
+          <div class="desc" style="margin-top:6px;font-size:0.88rem;">后续将为大家固化一套 <strong>AI写作模板（SKILL）</strong>，让大家用AI就能获得一份更好的立项文件。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 30: Part4 驾驭AI 引入 ==================== -->
+<div class="slide">
+  <div class="tag tag-violet">PART 4 · 驾驭AI</div>
+  <div style="text-align:center;max-width:780px;">
+    <h1 class="hero fu" style="font-size:2.6rem;"><span class="grad-text">驾驭 AI</span></h1>
+    <p class="fu desc" style="font-size:1rem;margin-top:16px;">让AI成为你的得力助手，而不只是搜索引擎</p>
+    <div class="g2 fu" style="margin-top:32px;max-width:560px;margin-left:auto;margin-right:auto;">
+      <div class="tip-card">
+        <div class="tip-num grad-text">01</div>
+        <div class="tip-title">基础技巧</div>
+        <div class="desc" style="font-size:0.82rem;">清晰的提示词框架<br>背景 · 角色 · 任务 · 输出格式</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-num grad-text-warm">02</div>
+        <div class="tip-title">复杂动作</div>
+        <div class="desc" style="font-size:0.82rem;">对齐颗粒度 · 先规划再行动<br>深度思考 · 保持上下文</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 31: 提示词对比Demo ==================== -->
+<div class="slide">
+  <div class="tag tag-violet">PART 4 · 提示词对比</div>
+  <h2 class="title fu" style="font-size:1.5rem;">⚡ 好提示词 vs 差提示词 — 效果天差地别</h2>
+  <div class="chat-demo fu">
+    <div class="chat-panel" id="chatBad">
+      <div class="chat-head" style="background:#fff1f2;"><span class="dot" style="background:var(--rose);"></span><span style="color:var(--rose);">差提示词</span></div>
+      <div class="chat-body" id="chatBadBody"></div>
+      <div class="chat-foot"><button onclick="runBadChat()">▶ 发送差提示词</button></div>
+    </div>
+    <div class="chat-panel" id="chatGood">
+      <div class="chat-head" style="background:#ecfdf5;"><span class="dot" style="background:var(--emerald);"></span><span style="color:var(--emerald);">好提示词</span></div>
+      <div class="chat-body" id="chatGoodBody"></div>
+      <div class="chat-foot"><button onclick="runGoodChat()">▶ 发送好提示词</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 心法1 对齐颗粒度 ==================== -->
+<div class="slide">
+  <div class="tag tag-violet">PART 4 · 心法 1/4</div>
+  <div style="text-align:center;max-width:700px;">
+    <div style="font-size:4rem;margin-bottom:16px;">🎯</div>
+    <h2 class="title fu" style="font-size:1.8rem;align-self:center;">心法一：对齐颗粒度</h2>
+    <p class="fu desc" style="font-size:1rem;margin-top:12px;line-height:1.9;">
+      给完任务提示词后，让AI<strong>复述一遍</strong>你的任务。<br>
+      确认理解正确后再行动。<br>
+      避免"你以为AI理解了，其实它理解偏了"的情况。
+    </p>
+    <div class="fu card" style="margin-top:28px;padding:24px 32px;text-align:left;border-left:4px solid var(--blue);">
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">示例提示词</div>
+      <div style="font-size:1.05rem;color:var(--blue);font-style:italic;line-height:1.8;">
+        "请先用你的话复述一遍我的需求，确认后我们再开始。"
+      </div>
+    </div>
+    <div class="fu" style="margin-top:20px;display:flex;gap:16px;justify-content:center;">
+      <div style="padding:8px 16px;background:#eef2ff;border-radius:10px;font-size:0.82rem;color:var(--blue);">防止理解偏差</div>
+      <div style="padding:8px 16px;background:#eef2ff;border-radius:10px;font-size:0.82rem;color:var(--blue);">节省返工时间</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 心法2 先规划再行动 ==================== -->
+<div class="slide">
+  <div class="tag tag-violet">PART 4 · 心法 2/4</div>
+  <div style="text-align:center;max-width:700px;">
+    <div style="font-size:4rem;margin-bottom:16px;">📝</div>
+    <h2 class="title fu" style="font-size:1.8rem;align-self:center;">心法二：先规划再行动</h2>
+    <p class="fu desc" style="font-size:1rem;margin-top:12px;line-height:1.9;">
+      不要一上来就让AI生成全部内容。<br>
+      <strong>渐进式协作：</strong>先出框架 → 确认 → 再逐步展开。<br>
+      像带实习生一样，一步一步来。
+    </p>
+    <div class="fu card" style="margin-top:28px;padding:24px 32px;text-align:left;border-left:4px solid var(--teal);">
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">示例提示词</div>
+      <div style="font-size:1.05rem;color:var(--teal);font-style:italic;line-height:1.8;">
+        "先给我一个大纲框架，等我确认后再逐章撰写。"
+      </div>
+    </div>
+    <div class="fu" style="margin-top:20px;display:flex;gap:16px;justify-content:center;">
+      <div style="padding:8px 16px;background:#ecfdf5;border-radius:10px;font-size:0.82rem;color:var(--teal);">掌控全局</div>
+      <div style="padding:8px 16px;background:#ecfdf5;border-radius:10px;font-size:0.82rem;color:var(--teal);">避免方向跑偏</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 心法3 深度思考 ==================== -->
+<div class="slide">
+  <div class="tag tag-violet">PART 4 · 心法 3/4</div>
+  <div style="text-align:center;max-width:700px;">
+    <div style="font-size:4rem;margin-bottom:16px;">💡</div>
+    <h2 class="title fu" style="font-size:1.8rem;align-self:center;">心法三：深度思考</h2>
+    <p class="fu desc" style="font-size:1rem;margin-top:12px;line-height:1.9;">
+      在复杂任务开始时附加<strong>"思考指令"</strong>，<br>
+      让AI先想清楚再输出，而不是急于给出"正确的废话"。<br>
+      鼓励AI<strong>主动提问</strong>以澄清模糊需求。
+    </p>
+    <div class="fu card" style="margin-top:28px;padding:24px 32px;text-align:left;border-left:4px solid var(--violet);">
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">示例提示词</div>
+      <div style="font-size:1.05rem;color:var(--violet);font-style:italic;line-height:1.8;">
+        "不要着急输出，宁可先问我几个关键问题，<br>也不要给我正确的废话。"
+      </div>
+    </div>
+    <div class="fu" style="margin-top:20px;display:flex;gap:16px;justify-content:center;">
+      <div style="padding:8px 16px;background:#f5f3ff;border-radius:10px;font-size:0.82rem;color:var(--violet);">提升输出质量</div>
+      <div style="padding:8px 16px;background:#f5f3ff;border-radius:10px;font-size:0.82rem;color:var(--violet);">减少"废话"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 心法4 保持上下文 ==================== -->
+<div class="slide">
+  <div class="tag tag-violet">PART 4 · 心法 4/4</div>
+  <div style="text-align:center;max-width:700px;">
+    <div style="font-size:4rem;margin-bottom:16px;">🔗</div>
+    <h2 class="title fu" style="font-size:1.8rem;align-self:center;">心法四：保持上下文</h2>
+    <p class="fu desc" style="font-size:1rem;margin-top:12px;line-height:1.9;">
+      让AI每次回答都说一句<strong>"暗号"</strong>（如"欧耶"）。<br>
+      暗号消失 = 上下文窗口满了 → 需要<strong>压缩整理</strong>。<br>
+      这样你就能知道AI是否还"记得"之前的对话。
+    </p>
+    <div class="fu card" style="margin-top:28px;padding:24px 32px;text-align:left;border-left:4px solid var(--orange);">
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">示例提示词</div>
+      <div style="font-size:1.05rem;color:var(--orange);font-style:italic;line-height:1.8;">
+        "每次回答开头都说'欧耶'，<br>当不说的时候提醒我。"
+      </div>
+    </div>
+    <div class="fu" style="margin-top:20px;display:flex;gap:16px;justify-content:center;">
+      <div style="padding:8px 16px;background:#fff7ed;border-radius:10px;font-size:0.82rem;color:var(--orange);">监控记忆状态</div>
+      <div style="padding:8px 16px;background:#fff7ed;border-radius:10px;font-size:0.82rem;color:var(--orange);">及时整理上下文</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE: 部门分享 ==================== -->
+<div class="slide">
+  <div class="tag tag-rose">PART 5 · 部门分享</div>
+  <h2 class="title fu" style="align-self:center;text-align:center;">🎤 部门分享互动</h2>
+  <p class="fu desc" style="text-align:center;margin-bottom:28px;">形式不限，欢迎围绕以下方向展开分享</p>
+  <div class="g3 fu" style="max-width:800px;">
+    <div class="share-card"><div class="share-icon">📊</div><div style="font-weight:600;font-size:0.9rem;">计划立项项目进展</div></div>
+    <div class="share-card"><div class="share-icon">📚</div><div style="font-weight:600;font-size:0.9rem;">部门培训情况</div></div>
+    <div class="share-card"><div class="share-icon">🗺️</div><div style="font-weight:600;font-size:0.9rem;">部门数智化规划</div></div>
+    <div class="share-card"><div class="share-icon">⚙️</div><div style="font-weight:600;font-size:0.9rem;">数智化项目进度</div></div>
+    <div class="share-card"><div class="share-icon">🔬</div><div style="font-weight:600;font-size:0.9rem;">市场调研与学习</div></div>
+    <div class="share-card"><div class="share-icon">💡</div><div style="font-weight:600;font-size:0.9rem;">场景可行性探讨</div></div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 35: 结尾 ==================== -->
+<div class="slide">
+  <div style="text-align:center;">
+    <h1 class="hero fu" style="font-size:2.6rem;"><span class="grad-text">感谢参与</span></h1>
+    <p class="fu desc" style="font-size:1.05rem;margin-top:20px;line-height:2;">
+      数智化不是终点，而是持续演进的旅程<br>
+      <strong style="color:var(--text);">让我们一起，用数据驱动决策，用AI赋能临研</strong>
+    </p>
+    <div class="fu" style="margin-top:44px;display:flex;gap:24px;justify-content:center;">
+      <div class="card" style="padding:20px 28px;text-align:center;">
+        <div style="font-size:1.8rem;margin-bottom:6px;">📧</div><div style="font-size:0.82rem;color:var(--text-muted);">需求反馈</div>
+      </div>
+      <div class="card" style="padding:20px 28px;text-align:center;">
+        <div style="font-size:1.8rem;margin-bottom:6px;">💬</div><div style="font-size:0.82rem;color:var(--text-muted);">随时沟通</div>
+      </div>
+      <div class="card" style="padding:20px 28px;text-align:center;">
+        <div style="font-size:1.8rem;margin-bottom:6px;">🚀</div><div style="font-size:0.82rem;color:var(--text-muted);">共同推进</div>
+      </div>
+    </div>
+    <p class="fu" style="margin-top:44px;color:var(--text-muted);font-size:0.8rem;">临床研发中心数智化推进小组 · 2026年4月</p>
+  </div>
+</div>
+
+</div><!-- /slides-container -->
+
+<div class="nav-pill">
+  <button onclick="prev()" title="上一页">←</button>
+  <div class="nav-counter" id="counter">1 / 31</div>
+  <button onclick="next()" title="下一页">→</button>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+const P1_START = 1;
+const P1_END = total > 20 ? (() => {
+  for (let i = 0; i < slides.length; i++) {
+    const tag = slides[i].querySelector('.tag.tag-green, .tag.tag-orange, .tag.tag-violet, .tag.tag-rose');
+    if (tag && i > P1_START) return i - 1;
+  }
+  return 16;
+})() : 16;
+
+const chapters = [
+  { name: '引言',       match: s => { const t = slides[s]?.querySelector('.tag'); return t && t.textContent.includes('五年规划'); } },
+  { name: '外部压力',   match: s => { const t = slides[s]?.querySelector('.tag'); return t && (t.textContent.includes('外部压力') || t.textContent.includes('技术竞速')); } },
+  { name: '现状评估',   match: s => { const t = slides[s]?.querySelector('.tag'); return t && (t.textContent.includes('现状评估') || t.textContent.includes('竞企对标') || t.textContent.includes('问题诊断')); } },
+  { name: '战略预判',   match: s => { const t = slides[s]?.querySelector('.tag'); return t && t.textContent.includes('战略预判'); } },
+  { name: '角色定位',   match: s => { const t = slides[s]?.querySelector('.tag'); return t && t.textContent.includes('角色定位'); } },
+  { name: '整体规划',   match: s => { const t = slides[s]?.querySelector('.tag'); return t && (t.textContent.includes('整体规划') || t.textContent.includes('保障体系')); } },
+  { name: '总体路径',   match: s => { const t = slides[s]?.querySelector('.tag'); return t && t.textContent.includes('总体路径'); } },
+  { name: '2026重点',   match: s => { const t = slides[s]?.querySelector('.tag'); return t && t.textContent.includes('重点工作'); } },
+];
+
+const chRanges = [];
+chapters.forEach((ch, ci) => {
+  let first = -1, last = -1;
+  for (let s = P1_START; s <= P1_END; s++) {
+    if (ch.match(s)) { if (first < 0) first = s; last = s; }
+  }
+  chRanges.push({ first, last });
+});
+
+const partNav = document.getElementById('partNav');
+const pnItems = partNav.querySelectorAll('.pn-item');
+
+function updateNav(n) {
+  const inPart1 = n >= P1_START && n <= P1_END;
+  partNav.classList.toggle('visible', inPart1);
+  if (!inPart1) return;
+  let activeIdx = -1;
+  chRanges.forEach((r, i) => { if (n >= r.first && n <= r.last) activeIdx = i; });
+  if (activeIdx < 0 && slides[n]?.classList.contains('part-divider')) {
+    activeIdx = n === P1_START ? -1 : chapters.length - 1;
+  }
+  pnItems.forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i === activeIdx) el.classList.add('active');
+    else if (chRanges[i].last > 0 && n > chRanges[i].last) el.classList.add('done');
+  });
+}
+
+function go(n) {
+  slides[current].classList.remove('active');
+  current = Math.max(0, Math.min(n, total - 1));
+  slides[current].classList.add('active');
+  document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+  updateNav(current);
+}
+
+function next() { if (current < total - 1) go(current + 1); }
+function prev() { if (current > 0) go(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  if (e.key === 'Home') { e.preventDefault(); go(0); }
+  if (e.key === 'End') { e.preventDefault(); go(total - 1); }
+});
+
+let touchStartX = 0;
+let wheelLock = false;
+document.addEventListener('wheel', e => {
+  if (wheelLock) return;
+  wheelLock = true;
+  if (e.deltaY > 0) next(); else if (e.deltaY < 0) prev();
+  setTimeout(() => { wheelLock = false; }, 400);
+}, { passive: true });
+
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 60) { diff > 0 ? next() : prev(); }
+});
+
+go(0);
+
+// Chat Demo
+function addMsg(containerId, text, type, delay) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const body = document.getElementById(containerId);
+      const div = document.createElement('div');
+      div.className = 'chat-msg ' + type;
+      div.innerHTML = text;
+      body.appendChild(div);
+      body.scrollTop = body.scrollHeight;
+      resolve();
+    }, delay);
+  });
+}
+
+let badR = false;
+async function runBadChat() {
+  if (badR) return; badR = true;
+  document.getElementById('chatBadBody').innerHTML = '';
+  await addMsg('chatBadBody', '帮我写个临床试验的方案。', 'user', 200);
+  await addMsg('chatBadBody',
+    '好的，以下是一个临床试验方案模板：<br><br>' +
+    '1. 研究背景：[请填写]<br>2. 研究目的：[请填写]<br>3. 研究设计：[请填写]<br>4. 样本量：[请填写]<br>5. 入排标准：[请填写]<br>...<br><br>' +
+    '<span style="color:var(--rose);font-weight:600;">❌ 一堆空模板，毫无针对性<br>❌ 没有具体方案，等于没说</span>', 'ai', 1200);
+  badR = false;
+}
+
+let goodR = false;
+async function runGoodChat() {
+  if (goodR) return; goodR = true;
+  document.getElementById('chatGoodBody').innerHTML = '';
+  await addMsg('chatGoodBody',
+    '<strong>角色</strong>：你是资深临床研究方案设计专家。<br>' +
+    '<strong>背景</strong>：仿制药BE试验（口服固体制剂，普通释放片）。<br>' +
+    '<strong>任务</strong>：设计受试者入排标准。<br>' +
+    '<strong>限制</strong>：符合NMPA BE指导原则。<br>' +
+    '<strong>输出格式</strong>：分入选/排除标准，每条编号。', 'user', 200);
+  await addMsg('chatGoodBody',
+    '<strong>入选标准：</strong><br>' +
+    '1. 年龄18-55周岁（含），男性健康志愿者<br>' +
+    '2. 体重≥50kg，BMI 19.0-26.0 kg/m²<br>' +
+    '3. 体格检查、生命体征、心电图均无异常<br>' +
+    '4. 自愿签署知情同意书...<br><br>' +
+    '<strong>排除标准：</strong><br>' +
+    '1. 筛选前4周内使用过处方/非处方药<br>' +
+    '2. 已知对试验药物或其辅料过敏...<br><br>' +
+    '<span style="color:var(--emerald);font-weight:600;">✅ 具体、可执行、符合法规要求</span>', 'ai', 1500);
+  goodR = false;
+}
+
+</script>
+
+</body>
+</html>

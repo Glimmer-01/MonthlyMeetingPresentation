@@ -1,0 +1,7 @@
+# 过程稿、导出说明等 Markdown，仓库仅保留演示页
+*.md
+# 原始附件 Word，非页面运行所需
+*.docx
+
+.DS_Store
+Thumbs.db
